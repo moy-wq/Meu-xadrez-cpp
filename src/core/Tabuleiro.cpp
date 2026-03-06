@@ -7,7 +7,7 @@ Piece* Tab::getPiece(int x, int y){
     if (y > 0 && y < 8 && x > 0 && y < 8){
         return matriz[x][y];
     }
-} //Localização da peça
+} 
 bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
     Piece* peca_movida = matriz[startx][starty];
 
@@ -22,7 +22,7 @@ bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
         if (peca_movida->getColor() == peca_destino->getColor()){
             return false;
         }
-    }
+    } 
     
     bool IsCapture = (peca_destino != nullptr);
 
@@ -42,7 +42,7 @@ bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
     }
 
     return false;
-}
+} 
 
 Piece* Tab::PromotePeao(int x, int y, char opt){
     Piece* peao = matriz[x][y];
@@ -71,6 +71,13 @@ Piece* Tab::PromotePeao(int x, int y, char opt){
 
 
 }
+
+bool Tab::IsPathClear(int startx, int starty, int targetx, int targety, Tipo tipo){
+    
+
+}
+
+
 
 
 void Tab::Drawboard(){

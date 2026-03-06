@@ -10,4 +10,6 @@ class Peao: public Piece {
         
         Piece* IsPromoted(int option);
 
+        virtual bool CanJump() const override {return false;} ;
+
 };

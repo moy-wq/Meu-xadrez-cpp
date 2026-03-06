@@ -24,6 +24,8 @@ class Piece {
     
     Color getColor() const;
 
+    virtual bool CanJump() const {return false;};
+
     Tipo getType() const;
     
     virtual ~Piece(); // Destrutor

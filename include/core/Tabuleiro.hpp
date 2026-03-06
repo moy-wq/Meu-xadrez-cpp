@@ -14,7 +14,9 @@ class Tab{
         ~Tab();
 
         Piece* getPiece(int x, int y); //Localização da peça
+
         bool MovePiece(int startx, int starty, int targetx, int targety);
+        bool IsPathClear(int startx, int starty, int targetx, int targety);
 
         Piece* PromotePeao(int x, int y, char opt); 
 

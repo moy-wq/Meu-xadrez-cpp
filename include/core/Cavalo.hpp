@@ -7,5 +7,7 @@ class Cavalo: public Piece {
         Cavalo(bool status, int startx, int starty, Color color);
 
         bool IsValidMove(int targetx, int targety, bool IsCapture) override;
+        
+        virtual bool CanJump() const override {return true;} ;
 
 };

@@ -8,4 +8,6 @@ class Torre: public Piece {
 
         bool IsValidMove(int targetx, int targety, bool IsCapture) override;
 
+        virtual bool CanJump() const override {return false;} ;
+
 };
