@@ -17,6 +17,7 @@ class Tab{
 
         bool MovePiece(int startx, int starty, int targetx, int targety);
         bool IsPathClear(int startx, int starty, int targetx, int targety);
+        bool IsCheck(int kingx, int kingy);
 
         Piece* PromotePeao(int x, int y, char opt); 
 
@@ -25,4 +26,8 @@ class Tab{
         
     private:
         Piece* matriz[8][8];
+
+        bool CheckRaio(int kingx, int kingy, int stepx, int stepy,Tipo p1, Tipo p2);
+        bool CheckCavalo(int kingx, int kingy, int stepx, int stepy);
+        bool CheckPeao(int kingx, int kingy, int stepx, int stepy);
 };

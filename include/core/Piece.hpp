@@ -26,6 +26,10 @@ class Piece {
 
     virtual bool CanJump() const {return false;};
 
+    virtual bool isCheck(int targetx, int targety) const; 
+
+    
+
     Tipo getType() const;
     
     virtual ~Piece(); // Destrutor

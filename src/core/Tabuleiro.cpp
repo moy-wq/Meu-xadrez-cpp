@@ -1,5 +1,6 @@
 #include "../../include/core/Tabuleiro.hpp"
 #include <iostream>
+#include <cmath>
 
 
 
@@ -72,14 +73,73 @@ Piece* Tab::PromotePeao(int x, int y, char opt){
 
 }
 
-bool Tab::IsPathClear(int startx, int starty, int targetx, int targety, Tipo tipo){
-    
+bool Tab::IsPathClear(int startx, int starty, int targetx, int targety){
+    int stepx = (targetx > startx) ? 1: (targetx < startx ? -1: 0);
+    int stepy = (targety > starty) ? 1: (targety < starty ? -1: 0);
+
+    int currentx = startx + stepx;
+    int currenty = starty + stepy;
+
+    while (currentx != targetx || currenty != targety){
+        if (matriz[currentx][currenty] != nullptr){
+            return false;
+        }
+        currentx++;
+        currenty++;
+    }
+
+    return true;
+}
+
+
+
+/*percorre o tabuleiro em possíveis direções buscando peças que podem atacar o rei (condição de check)*/
+bool Tab::CheckRaio(int kingx, int kingy, int stepx, int stepy, Tipo p1, Tipo p2){ 
+    Piece* king = matriz[kingx][kingy];
+    int possible_x = kingx + stepx;
+    int possible_y = kingy + stepy;
+
+    while ( possible_x >= 0 && possible_x < 8 && possible_y >= 0 && possible_y < 8 ){
+        Piece* possible_piece = matriz[possible_x][possible_y];
+
+        if (possible_piece != nullptr){
+            if (possible_piece->getColor() != king->getColor() && possible_piece->getType() == p1 || possible_piece->getType() == p2){
+                return true;        
+            }
+            break;
+        }
+
+    possible_x += stepx;
+    possible_y += stepy; // modificam exatamente a direção percorrida no tabuleiro
+        
+    }
+    return false;
+}
+
+
+bool Tab::CheckCavalo(int kingx, int kingy, int stepx, int stepy){
+    Piece* king = matriz[kingx][kingy];
+    int possible_x = kingx + stepx;
+    int poissible_y = kingy + stepy;
+
+
+
 
 }
 
 
 
 
-void Tab::Drawboard(){
+bool Tab::IsCheck(int kingx, int kingy){
+    Piece* king_piece = matriz[kingx][kingy];
+    Color color_king = king_piece->getColor();  
+
+
+
+
+
+
+
+
 
 }
