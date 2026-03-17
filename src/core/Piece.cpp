@@ -4,10 +4,9 @@
 enum class Color {White, Black};
 
 
-Piece::Piece(bool status ,int startx, int starty, Color color, Tipo type){ // construtor
+Piece::Piece(int startx, int starty, Color color, Tipo type){ // construtor
     this->x = startx;
     this->y = starty;
-    this->active = status;
     this->c = color;
     this->tipo = type;
 }
@@ -18,6 +17,14 @@ Color Piece::getColor() const{
 
 Tipo Piece::getType() const{
     return this->tipo;
+}
+
+int Piece::GetX() const{
+    return this->x;
+}
+
+int Piece::GetY() const{
+    return this->y;
 }
 
 void Piece::SetPos(int newx, int newy){

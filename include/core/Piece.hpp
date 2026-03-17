@@ -13,7 +13,6 @@ class Piece {
         Piece(bool status ,int startx, int starty, Color color, Tipo type){ // construtor
             x = startx;
             y = starty;
-            active = status;
             c = color;
             tipo = type; 
     }
@@ -38,7 +37,6 @@ class Piece {
     protected:
         Color c;
         int x, y; 
-        bool active;
         Tipo tipo;
     };
 

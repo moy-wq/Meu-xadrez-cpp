@@ -4,7 +4,7 @@
 
 class Torre: public Piece {
     public:
-        Torre(bool status, int startx, int starty, Color color);
+        Torre(int startx, int starty, Color color);
 
         bool IsValidMove(int targetx, int targety, bool IsCapture) override;
 

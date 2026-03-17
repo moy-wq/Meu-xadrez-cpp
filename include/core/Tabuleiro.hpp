@@ -26,8 +26,10 @@ class Tab{
         
     private:
         Piece* matriz[8][8];
+        Piece* ReiBranco;
+        Piece* ReiPreto;
 
         bool CheckRaio(int kingx, int kingy, int stepx, int stepy,Tipo p1, Tipo p2);
-        bool CheckCavalo(int kingx, int kingy, int stepx, int stepy);
+        bool CheckCavalo(int kingx, int kingy);
         bool CheckPeao(int kingx, int kingy, int stepx, int stepy);
 };
