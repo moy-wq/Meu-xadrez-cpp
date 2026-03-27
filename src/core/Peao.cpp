@@ -3,7 +3,7 @@
 #include "../../include/core/Tabuleiro.hpp"
 
 
-Peao::Peao(bool status, int startx, int starty, Color color): Piece(status, startx, starty, color, Tipo::PEAO){} // Construtor de Piece
+Peao::Peao(int startx, int starty, Color color): Piece(startx, starty, color, Tipo::PEAO){} // Construtor de Piece
 
 
 

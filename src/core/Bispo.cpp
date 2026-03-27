@@ -5,7 +5,7 @@
 #include <cmath>
 #include <iostream>
 
-Bispo::Bispo(bool status, int startx, int starty, Color color): Piece(status, startx, starty, color, Tipo::BISPO){} // Construtor de Piece
+Bispo::Bispo(int startx, int starty, Color color): Piece(startx, starty, color, Tipo::BISPO){} // Construtor de Piece
 
 bool Bispo::IsValidMove(int targetx,int targety, bool IsCapture){
     
