@@ -29,7 +29,7 @@ class Tab{
         Piece* ReiBranco;
         Piece* ReiPreto;
     
-        Color TurnoAtual;
+        Cor TurnoAtual;
 
         bool CheckRaio(int kingx, int kingy, int stepx, int stepy,Tipo p1, Tipo p2);
         bool CheckCavalo(int kingx, int kingy);

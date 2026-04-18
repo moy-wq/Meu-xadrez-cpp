@@ -4,7 +4,7 @@
 
 class Bispo: public Piece {
     public:
-        Bispo(int startx, int starty, Color color);
+        Bispo(int startx, int starty, Cor color);
 
         bool IsValidMove(int targetx, int targety, bool IsCapture) override;
 

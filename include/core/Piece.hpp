@@ -3,14 +3,14 @@
 #include <iostream>
 
 
-enum class Color {White, Black};
+enum class Cor {White, Black};
 
 enum class Tipo {PEAO, TORRE, CAVALO, RAINHA, REI, BISPO};
 
 class Piece {
     
     public:
-        Piece(int startx, int starty, Color color, Tipo type){ // construtor
+        Piece(int startx, int starty, Cor color, Tipo type){ // construtor
             x = startx;
             y = starty;
             c = color;
@@ -24,7 +24,7 @@ class Piece {
     int GetX() const;
     int GetY() const;
     
-    Color getColor() const;
+    Cor getColor() const;
 
     virtual bool CanJump() const {return false;};
 
@@ -38,7 +38,7 @@ class Piece {
     
 
     protected:
-        Color c;
+        Cor c;
         int x, y; 
         Tipo tipo;
     };
