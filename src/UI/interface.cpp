@@ -65,17 +65,17 @@ void Interface::DrawTab(Tab& tabuleiroLogico) {
                     if (peca_atual != nullptr){ 
                         Vector2 posDesenho = {(float)i, (float)j};
                         if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->PeaoPreto, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->PeaoPreto, posDesenho, BLACK);
+                        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::White) DrawTextureV(this->PeaoPreto, posDesenho, BLACK);
                         if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->BispoBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->BispoPreto, posDesenho, BLACK);
+                        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::White) DrawTextureV(this->BispoPreto, posDesenho, BLACK);
                         if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::Black) DrawTextureV(this->TorreBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::Black) DrawTextureV(this->TorrePreta, posDesenho, BLACK);
+                        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::White) DrawTextureV(this->TorrePreta, posDesenho, BLACK);
                         if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->CavaloBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->CavaloPreto, posDesenho, BLACK);
+                        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::White) DrawTextureV(this->CavaloPreto, posDesenho, BLACK);
                         if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::Black) DrawTextureV(this->ReiBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::Black) DrawTextureV(this->ReiPreto, posDesenho, BLACK);
+                        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::White) DrawTextureV(this->ReiPreto, posDesenho, BLACK);
                         if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::Black) DrawTextureV(this->RainhaBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::Black) DrawTextureV(this->RainhaPreto, posDesenho, BLACK);
+                        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::White) DrawTextureV(this->RainhaPreto, posDesenho, BLACK);
                     
                     }
                 }
