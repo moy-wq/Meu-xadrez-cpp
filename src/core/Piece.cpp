@@ -35,5 +35,5 @@ void Piece::SetPos(int newx, int newy){
 
 
 
-Piece::~Piece(){}
+Piece::~Piece(){};
 

@@ -21,45 +21,54 @@ Tab::Tab(){
     }
 
 
-    for (int x=0; x < 8; x++){
-        matriz[x][1] = new Peao(x, 1, Cor::White);
-        matriz[x][6] = new Peao(x, 6, Cor::Black);
+    for (int y=0; y < 8; y++){
+        matriz[1][y] = new Peao(1, y, Cor::White);
+        matriz[6][y] = new Peao(6, y, Cor::Black);
     }
 
-    ReiBranco = new Rei(4,0,Cor::White);
-    matriz[4][0] = ReiBranco;
+    ReiBranco = new Rei(0,4,Cor::White);
+    matriz[0][4] = ReiBranco;
 
-    ReiPreto = new Rei(4,7,Cor::Black);
-    matriz[4][7] = ReiPreto;
+    ReiPreto = new Rei(7,4,Cor::Black);
+    matriz[7][4] = ReiPreto;
 
     matriz[0][0] = new Torre(0,0, Cor::White);
-    matriz[7][0] = new Torre(7,0, Cor::White);
-    matriz[0][7] = new Torre(0,7,Cor::Black);
+    matriz[0][7] = new Torre(0,7, Cor::White);
+    matriz[7][0] = new Torre(7,0,Cor::Black);
     matriz[7][7] = new Torre(7,7,Cor::Black);
 
-    matriz[3][0] = new Rainha(3, 0, Cor::White);
-    matriz[3][7] = new Rainha(3, 7, Cor::Black);
+    matriz[0][3] = new Rainha(0, 3, Cor::White);
+    matriz[7][3] = new Rainha(7, 3, Cor::Black);
 
-    matriz[1][0] = new Cavalo(1,0, Cor::White);
-    matriz[6][0] = new Cavalo(6,0, Cor::White);
-    matriz[1][7] = new Cavalo(1,7, Cor::Black);
-    matriz[6][7] = new Cavalo(6,7, Cor::Black);
+    matriz[0][1] = new Cavalo(0,1, Cor::White);
+    matriz[0][6] = new Cavalo(0,6, Cor::White);
+    matriz[7][1] = new Cavalo(7,1, Cor::Black);
+    matriz[7][6] = new Cavalo(7,6, Cor::Black);
 
-    matriz[2][0] = new Bispo(2,0,Cor::White);
-    matriz[5][0] = new Bispo(5,0,Cor::White);
-    matriz[2][7] = new Bispo(2,7,Cor::Black);
-    matriz[5][7] = new Bispo(5,7,Cor::Black);
+    matriz[0][2] = new Bispo(0,2,Cor::White);
+    matriz[0][5] = new Bispo(0,5,Cor::White);
+    matriz[7][2] = new Bispo(7,2,Cor::Black);
+    matriz[7][5] = new Bispo(7,5,Cor::Black);
 
     TurnoAtual = Cor::White;
 }
 
-
+Tab::~Tab() {
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            if (matriz[x][y] != nullptr) {
+                delete matriz[x][y];
+                matriz[x][y] = nullptr;
+            }
+        }
+    }
+}
 
 
 Piece* Tab::getPiece(int x, int y){
-    if (y > 0 && y < 8 && x > 0 && y < 8){
+    if (y >= 0 && y < 8 && x >= 0 && x < 8){
         return matriz[x][y];
-    }
+    } else return nullptr;
 } 
 
 
@@ -177,7 +186,7 @@ bool Tab::IsPathClear(int startx, int starty, int targetx, int targety){
 
 
 /*percorre o tabuleiro em possíveis direções buscando peças que podem atacar o rei (condição de check)*/
-bool Tab::CheckRaio(int kingx, int kingy, int stepx, int stepy, Tipo p1, Tipo p2){ 
+bool Tab::CheckRaio(int kingx, int kingy, int stepx, int stepy, Tipo p1, Tipo p2) const{ 
     Piece* king = matriz[kingx][kingy];
     int possible_x = kingx + stepx;
     int possible_y = kingy + stepy;
@@ -201,7 +210,7 @@ bool Tab::CheckRaio(int kingx, int kingy, int stepx, int stepy, Tipo p1, Tipo p2
 
 
 /* checa as possíveis posições do cavalo*/
-bool Tab::CheckCavalo(int kingx, int kingy){
+bool Tab::CheckCavalo(int kingx, int kingy) const{
     Piece* king = matriz[kingx][kingy];
 
     int dx[] = {1,-1,1,-1, 2,2,-2,-2};
@@ -224,7 +233,7 @@ bool Tab::CheckCavalo(int kingx, int kingy){
 
 
 
-bool Tab::IsCheck(int kingx, int kingy){
+bool Tab::IsCheck(int kingx, int kingy) const{
     Piece* king_piece = matriz[kingx][kingy];
     Cor color_king = king_piece->getColor();  
     

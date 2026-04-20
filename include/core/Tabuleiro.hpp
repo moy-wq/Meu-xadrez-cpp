@@ -17,7 +17,7 @@ class Tab{
 
         bool MovePiece(int startx, int starty, int targetx, int targety);
         bool IsPathClear(int startx, int starty, int targetx, int targety);
-        bool IsCheck(int kingx, int kingy);
+        bool IsCheck(int kingx, int kingy) const;
 
         Piece* PromotePeao(int x, int y, char opt); 
 
@@ -31,7 +31,6 @@ class Tab{
     
         Cor TurnoAtual;
 
-        bool CheckRaio(int kingx, int kingy, int stepx, int stepy,Tipo p1, Tipo p2);
-        bool CheckCavalo(int kingx, int kingy);
-        bool CheckPeao(int kingx, int kingy, int stepx, int stepy);
+        bool CheckRaio(int kingx, int kingy, int stepx, int stepy,Tipo p1, Tipo p2) const;
+        bool CheckCavalo(int kingx, int kingy) const;
 };

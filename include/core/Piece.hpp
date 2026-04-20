@@ -10,12 +10,7 @@ enum class Tipo {PEAO, TORRE, CAVALO, RAINHA, REI, BISPO};
 class Piece {
     
     public:
-        Piece(int startx, int starty, Cor color, Tipo type){ // construtor
-            x = startx;
-            y = starty;
-            c = color;
-            tipo = type; 
-    }
+        Piece(int startx, int starty, Cor color, Tipo type); // construtor
 
     virtual bool IsValidMove(int targetx, int target_y, bool IsCapture) = 0; // Flag de possibilidade de movimento
 
@@ -27,8 +22,6 @@ class Piece {
     Cor getColor() const;
 
     virtual bool CanJump() const {return false;};
-
-    virtual bool isCheck(int targetx, int targety) const; 
 
     
 

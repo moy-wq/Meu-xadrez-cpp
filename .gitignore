@@ -1,0 +1,35 @@
+# Arquivos de objeto gerados durante a compilação
+*.o
+*.obj
+
+# Bibliotecas dinâmicas e estáticas
+*.so
+*.a
+*.dylib
+*.dll
+
+# Executáveis
+*.out
+*.exe
+*.app
+
+# Ignore o binário final do seu jogo (Linux geralmente não tem extensão)
+# Se o seu executável se chama "Xadrez" ou "xadrez", descomente as linhas abaixo:
+Xadrez
+xadrez
+main
+
+# Pastas e arquivos do VS Code 
+# (Descomente a linha abaixo se NÃO quiser subir seus arquivos tasks.json e launch.json)
+# .vscode/
+
+# Logs e arquivos temporários de compilação
+*.log
+*.tmp
+.cache/
+*~
+
+# Pastas de build (se você for usar CMake ou Makefiles que geram pastas)
+build/
+bin/
+obj/
