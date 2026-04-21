@@ -1,6 +1,4 @@
 #include <raylib.h>
-<<<<<<< HEAD
-=======
 #include "../core/Tabuleiro.hpp"
 
 class Interface{
@@ -30,4 +28,3 @@ class Interface{
 
 };
 
->>>>>>> aaa5de6 (feat: primeiras funcionalidades da classe app)
