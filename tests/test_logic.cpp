@@ -1,10 +1,10 @@
 #include <raylib.h>
-#include "../include/core/Tabuleiro.hpp" // Ajuste o nome do arquivo .hpp se for diferente
+#include "../include/core/Tabuleiro.hpp"
 #include "../include/UI/Interface.hpp"
 
 int main() {
-    // 1. Inicialização da Janela da Raylib
-    const int larguraTela = 1200; // Espaço extra para menus, se quiser
+
+    const int larguraTela = 1200; 
     const int alturaTela = 800;
     
 
