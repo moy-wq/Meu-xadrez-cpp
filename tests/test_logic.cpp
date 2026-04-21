@@ -12,7 +12,7 @@ int main() {
     SetTargetFPS(60);
 
     
-    Tab meuTabuleiroLogico;
+    Tab* meuTabuleiroLogico;
     
     Interface minhaInterface(100, 800); 
 

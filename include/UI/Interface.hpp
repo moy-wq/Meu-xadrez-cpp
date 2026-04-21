@@ -24,7 +24,7 @@ class Interface{
 
     public:
         Interface(int tamCasa, int offset);
-        void DrawTab(Tab& tabuleiroLogico);
+        void DrawTab(Tab* tabuleiroLogico);
 
         ~Interface();
 

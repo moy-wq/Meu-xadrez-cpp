@@ -68,7 +68,7 @@ Interface::Interface(int tam_casa, int offset){
 
 Interface::~Interface(){};
 
-void Interface::DrawTab(Tab& tabuleiroLogico) {
+void Interface::DrawTab(Tab* tabuleiroLogico) {
             ClearBackground(BLACK);
 
 
@@ -81,7 +81,7 @@ void Interface::DrawTab(Tab& tabuleiroLogico) {
                     int colunaMatriz = (i - 200) / this->tamanhoCasa;
                     int linhaMatriz = j / this->tamanhoCasa;
 
-                    Piece* peca_atual = tabuleiroLogico.getPiece(linhaMatriz, colunaMatriz);
+                    Piece* peca_atual = tabuleiroLogico->getPiece(linhaMatriz, colunaMatriz);
 
                     if ((i / this->tamanhoCasa) % 2 == 0){
                         if ((j /this->tamanhoCasa) % 2 == 0){
