@@ -3,12 +3,12 @@
 #include "../../include/core/Tabuleiro.hpp"
 
 
-Peao::Peao(int startx, int starty, Color color): Piece(startx, starty, color, Tipo::PEAO){} // Construtor de Piece
+Peao::Peao(int startx, int starty, Cor color): Piece(startx, starty, color, Tipo::PEAO){} // Construtor de Piece
 
 
 
 bool Peao::IsValidMove(int targetx, int targety, bool IsCapture){
-    int direction = (this->c == Color::White ) ? 1 : -1; //if ternário
+    int direction = (this->c == Cor::White ) ? 1 : -1; //if ternário
     
     if (this->x == targetx && targety == 1 + this->y){
 

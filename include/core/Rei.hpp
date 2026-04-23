@@ -4,7 +4,7 @@
 
 class Rei: public Piece {
     public:
-        Rei( int startx, int starty, Color color);
+        Rei( int startx, int starty, Cor color);
 
         bool IsValidMove(int targetx, int targety, bool IsCapture) override;
 

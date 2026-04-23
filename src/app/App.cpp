@@ -10,7 +10,7 @@ App::App(){
 }
 
 /*Loop do jogo*/
-void App::app_loop(){
+void App::app_loop(){ // incompleto
     Tab* tabuleiro_logico = this->tabuleiro;
     while(!WindowShouldClose()){
         

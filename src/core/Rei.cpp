@@ -2,7 +2,7 @@
 #include "../../include/core/Piece.hpp"
 #include "../../include/core/Tabuleiro.hpp"
 #include <cmath>
-Rei::Rei(int startx, int starty, Color color): Piece(startx, starty, color, Tipo::REI){} // Construtor de Piece
+Rei::Rei(int startx, int starty, Cor color): Piece(startx, starty, color, Tipo::REI){} // Construtor de Piece
 
 
 bool Rei::IsValidMove(int targetx, int targety, bool IsCapture){

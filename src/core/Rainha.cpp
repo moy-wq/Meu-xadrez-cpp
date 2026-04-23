@@ -5,7 +5,7 @@
 
 
 
-Rainha::Rainha(int startx, int starty, Color color): Piece(startx, starty, color, Tipo::RAINHA){} // Construtor de Piece
+Rainha::Rainha(int startx, int starty, Cor color): Piece(startx, starty, color, Tipo::RAINHA){} // Construtor de Piece
 
 
 bool Rainha::IsValidMove(int targetx, int targety, bool IsCapture){

@@ -4,7 +4,7 @@
 
 class Peao: public Piece {
     public:
-        Peao(int startx, int starty, Color color);
+        Peao(int startx, int starty, Cor color);
 
         bool IsValidMove(int targetx, int targety, bool IsCapture) override;
         

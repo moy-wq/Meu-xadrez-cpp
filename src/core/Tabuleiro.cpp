@@ -22,35 +22,35 @@ Tab::Tab(){
 
 
     for (int x=0; x < 8; x++){
-        matriz[x][1] = new Peao(x, 1, Color::White);
-        matriz[x][6] = new Peao(x, 6, Color::Black);
+        matriz[x][1] = new Peao(x, 1, Cor::White);
+        matriz[x][6] = new Peao(x, 6, Cor::Black);
     }
 
-    ReiBranco = new Rei(4,0,Color::White);
+    ReiBranco = new Rei(4,0,Cor::White);
     matriz[4][0] = ReiBranco;
 
-    ReiPreto = new Rei(4,7,Color::Black);
+    ReiPreto = new Rei(4,7,Cor::Black);
     matriz[4][7] = ReiPreto;
 
-    matriz[0][0] = new Torre(0,0, Color::White);
-    matriz[7][0] = new Torre(7,0, Color::White);
-    matriz[0][7] = new Torre(0,7,Color::Black);
-    matriz[7][7] = new Torre(7,7,Color::Black);
+    matriz[0][0] = new Torre(0,0, Cor::White);
+    matriz[7][0] = new Torre(7,0, Cor::White);
+    matriz[0][7] = new Torre(0,7,Cor::Black);
+    matriz[7][7] = new Torre(7,7,Cor::Black);
 
-    matriz[3][0] = new Rainha(3, 0, Color::White);
-    matriz[3][7] = new Rainha(3, 7, Color::Black);
+    matriz[3][0] = new Rainha(3, 0, Cor::White);
+    matriz[3][7] = new Rainha(3, 7, Cor::Black);
 
-    matriz[1][0] = new Cavalo(1,0, Color::White);
-    matriz[6][0] = new Cavalo(6,0, Color::White);
-    matriz[1][7] = new Cavalo(1,7, Color::Black);
-    matriz[6][7] = new Cavalo(6,7, Color::Black);
+    matriz[1][0] = new Cavalo(1,0, Cor::White);
+    matriz[6][0] = new Cavalo(6,0, Cor::White);
+    matriz[1][7] = new Cavalo(1,7, Cor::Black);
+    matriz[6][7] = new Cavalo(6,7, Cor::Black);
 
-    matriz[2][0] = new Bispo(2,0,Color::White);
-    matriz[5][0] = new Bispo(5,0,Color::White);
-    matriz[2][7] = new Bispo(2,7,Color::Black);
-    matriz[5][7] = new Bispo(5,7,Color::Black);
+    matriz[2][0] = new Bispo(2,0,Cor::White);
+    matriz[5][0] = new Bispo(5,0,Cor::White);
+    matriz[2][7] = new Bispo(2,7,Cor::Black);
+    matriz[5][7] = new Bispo(5,7,Cor::Black);
 
-    TurnoAtual = Color::White;
+    TurnoAtual = Cor::White;
 }
 
 
@@ -66,11 +66,11 @@ Piece* Tab::getPiece(int x, int y){
 bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
     Piece* peca_movida = matriz[startx][starty];
 
-    Color Color_player = peca_movida->getColor();
+    Cor Color_player = peca_movida->getColor();
     
     int kx, ky;
     
-    if (Color_player == Color::White) {
+    if (Color_player == Cor::White) {
         kx = ReiBranco->GetX(); 
         ky = ReiBranco->GetY();
     } else {
@@ -108,8 +108,8 @@ bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
                 delete peca_destino;
             }
 
-            if (TurnoAtual == Color::White){ // Troca o turno
-                TurnoAtual = Color::Black;
+            if (TurnoAtual == Cor::White){ // Troca o turno
+                TurnoAtual = Cor::Black;
             } else {
             }
 
@@ -132,7 +132,7 @@ bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
 Piece* Tab::PromotePeao(int x, int y, char opt){
     Piece* peao = matriz[x][y];
 
-    Color c = peao->getColor();
+    Cor c = peao->getColor();
 
     delete peao;
     switch (opt){
@@ -228,7 +228,7 @@ bool Tab::CheckCavalo(int kingx, int kingy){
 
 bool Tab::IsCheck(int kingx, int kingy){
     Piece* king_piece = matriz[kingx][kingy];
-    Color color_king = king_piece->getColor();  
+    Cor color_king = king_piece->getColor();  
     
     if (CheckRaio(kingx, kingy,  1,  0, Tipo::TORRE, Tipo::RAINHA)) return true; 
     if (CheckRaio(kingx, kingy, -1,  0, Tipo::TORRE, Tipo::RAINHA)) return true; 

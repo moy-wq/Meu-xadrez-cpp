@@ -3,7 +3,7 @@
 #include "../../include/core/Tabuleiro.hpp"
 #include <cmath>
 
-Torre::Torre(int startx, int starty, Color color): Piece(startx, starty, color, Tipo::TORRE){} // Construtor de Piece
+Torre::Torre(int startx, int starty, Cor color): Piece(startx, starty, color, Tipo::TORRE){} // Construtor de Piece
 
 bool Torre::IsValidMove(int targetx, int targety, bool IsCapture){
     int Deltax = std::abs(targetx - this->x);
