@@ -12,18 +12,74 @@ App::App(){
 /*Loop do jogo*/
 void App::app_loop(){
     Tab* tabuleiro_logico = this->tabuleiro;
-    while(!WindowShouldClose()){
+    Piece* pecaSelecionada = nullptr; 
+    
+    GameState currentState = PLAYING; 
+    Cor corVencedora; 
+
+    while(!WindowShouldClose()){       
         
-        Vector2 Mouse_Pos = App::processing_mouse_click();
 
+        if (currentState == PLAYING) {
+            
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                Vector2 clickPos = App::processing_mouse_click(); 
+                
+                if (pecaSelecionada == nullptr) {
+            
+                    Piece* p = tabuleiro_logico->getPiece(clickPos.y, clickPos.x); 
+                    
+                    if (p != nullptr) {
+                        pecaSelecionada = p;
+                    }
+                } else {
+                    int startX = pecaSelecionada->GetX(); 
+                    int startY = pecaSelecionada->GetY(); 
+                    Cor corPeca = pecaSelecionada->getColor();
+                    Tipo tipoPeca = pecaSelecionada->getType(); 
 
+                    
+                    bool moveu = tabuleiro_logico->MovePiece(startY, startX, clickPos.y, clickPos.x);
+
+                    pecaSelecionada = nullptr;
+
+                    if (moveu) {
+                        print_move(tipoPeca, corPeca, startY, startX, clickPos.y, clickPos.x);
+
+                        if (tabuleiro_logico->IsCheckmate(tabuleiro_logico->GetTurnoAtual())) {
+                            currentState = GAME_OVER;
+                            corVencedora = (tabuleiro_logico->GetTurnoAtual() == Cor::Black) ? Cor::White : Cor::Black;
+                        }
+                    }
+                }
+            }
+            
+        } else if (currentState == GAME_OVER) {
+            
+            if (IsKeyPressed(KEY_ENTER)) {
+                delete this->tabuleiro;          
+                this->tabuleiro = new Tab();     
+                tabuleiro_logico = this->tabuleiro; 
+                currentState = PLAYING;
+            }
+        }
 
 
         BeginDrawing();
-            interface->DrawTab(tabuleiro_logico);
-        EndDrawing();
+            ClearBackground(RAYWHITE);
 
-        
+            interface->DrawTab(tabuleiro_logico); 
+
+            if (currentState == PLAYING) {
+                if (pecaSelecionada != nullptr){
+                    interface->ShowPossibleMoves(pecaSelecionada,tabuleiro_logico);
+                }
+            } 
+            else if (currentState == GAME_OVER) {
+                interface->DrawGameOverScreen(corVencedora);
+            }
+            
+        EndDrawing();
     }
 }
 
@@ -60,19 +116,24 @@ void App::print_move(Tipo tipoPeca, Cor corPeca, int linhaOrigem, int colOrigem,
 
 /*conversão para o formato da matriz (tabuleiro)*/
 Vector2 App::processing_mouse_click(){
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        int x = GetMouseX();
-        int y = GetMouseY();           
-                
-            x /=100;
-            y = 7 - (y / 100); 
 
-        if (x > 8 || x < 0 || y > 8 || y < 0) return Vector2{-1.0f, -1.0f};
-        return Vector2{(float) x, (float) y};
+    int rawX = GetMouseX() - 200; 
+    int rawY = GetMouseY();
+
+    if (rawX < 0) return Vector2{-1.0f, -1.0f};
+
+    int x = rawX / 100;
+    int y = rawY / 100;
+
+    if (x > 7 || x < 0 || y > 7 || y < 0) return Vector2{-1.0f, -1.0f};
+    return Vector2{(float) x, (float) y};
+}
+
+App::~App() {
+    if (this->tabuleiro != nullptr) {
+        delete this->tabuleiro;
     }
-
-
-
-    
-
+    if (this->interface != nullptr) {
+        delete this->interface;
+    }
 }

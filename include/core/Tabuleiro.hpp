@@ -18,9 +18,9 @@ class Tab{
         bool MovePiece(int startx, int starty, int targetx, int targety);
         bool IsPathClear(int startx, int starty, int targetx, int targety);
         bool IsCheck(int kingx, int kingy) const;
-
+        bool IsCheckmate(Cor playerColor);
         Piece* PromotePeao(int x, int y, char opt); 
-
+        Cor GetTurnoAtual() const;
         void Drawboard();
 
         

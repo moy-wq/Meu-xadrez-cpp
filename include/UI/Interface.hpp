@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 #include "../core/Tabuleiro.hpp"
+#include "../core/Piece.hpp"
 
 class Interface{
     private:
@@ -25,8 +26,11 @@ class Interface{
     public:
         Interface(int tamCasa, int offset);
         void DrawTab(Tab* tabuleiroLogico);
+        void PlaceTexture(Piece* peca_atual, int i, int j);
+        void ShowPossibleMoves(Piece* currentPiece, Tab* tabuleiro_logico);
 
         ~Interface();
+        void DrawGameOverScreen(Cor corVencedora);
 
 };
 

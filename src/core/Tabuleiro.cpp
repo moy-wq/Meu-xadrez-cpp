@@ -75,49 +75,54 @@ Piece* Tab::getPiece(int x, int y){
 bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
     Piece* peca_movida = matriz[startx][starty];
 
-    Cor Color_player = peca_movida->getColor();
-    
-    int kx, ky;
-    
-    if (Color_player == Cor::White) {
-        kx = ReiBranco->GetX(); 
-        ky = ReiBranco->GetY();
-    } else {
-        kx = ReiPreto->GetX();
-        ky = ReiPreto->GetY();
-    }
-    
-    
     if (peca_movida == nullptr){
         return false;
     }
 
+    Cor Color_player = peca_movida->getColor();
+    if (Color_player != TurnoAtual) {
+        return false; 
+    }
+
     Piece* peca_destino = matriz[targetx][targety];
 
-    if (peca_destino != nullptr){
-        
-        if (peca_movida->getColor() == peca_destino->getColor()){
-            return false;
-        }
+    if (peca_destino != nullptr && Color_player == peca_destino->getColor()){
+        return false;
     } 
     
     bool IsCapture = (peca_destino != nullptr);
+
 
     if (peca_movida->IsValidMove(targetx, targety, IsCapture)){
   
         matriz[targetx][targety] = peca_movida;
         matriz[startx][starty] = nullptr;
-        peca_movida->SetPos(targetx, targety); // simula o movimento para avaliar a condição de check
+        peca_movida->SetPos(targetx, targety); 
 
-        bool SafeMove = !IsCheck(kx,ky); 
+
+        int kx, ky;
+        if (Color_player == Cor::White) {
+            kx = (peca_movida == ReiBranco) ? targetx : ReiBranco->GetX(); 
+            ky = (peca_movida == ReiBranco) ? targety : ReiBranco->GetY();
+        } else {
+            kx = (peca_movida == ReiPreto) ? targetx : ReiPreto->GetX();
+            ky = (peca_movida == ReiPreto) ? targety : ReiPreto->GetY();
+        }
+
+
+        bool SafeMove = !IsCheck(kx, ky); 
+
         if (SafeMove){
+ 
             if (peca_destino != nullptr){
-                delete peca_destino;
+                delete peca_destino; // Libera memória da peça capturada
             }
 
-            if (TurnoAtual == Cor::White){ // Troca o turno
+
+            if (TurnoAtual == Cor::White){ 
                 TurnoAtual = Cor::Black;
             } else {
+                TurnoAtual = Cor::White;
             }
 
             return true;
@@ -129,11 +134,10 @@ bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
             
             return false;
         }
-
     }
 
-    return false;
-} 
+    return false; 
+}
 
 /* Promove o peão para a peça desejada pelo usuário*/
 Piece* Tab::PromotePeao(int x, int y, char opt){
@@ -171,13 +175,16 @@ bool Tab::IsPathClear(int startx, int starty, int targetx, int targety){
 
     int currentx = startx + stepx;
     int currenty = starty + stepy;
+    Piece* current_piece = matriz[startx][starty];
+    if (current_piece == nullptr) return true;
+    if (current_piece->getType() == Tipo::CAVALO) return true;
 
     while (currentx != targetx || currenty != targety){
         if (matriz[currentx][currenty] != nullptr){
             return false;
         }
-        currentx++;
-        currenty++;
+        currentx += stepx;
+        currenty += stepy;
     }
 
     return true;
@@ -254,9 +261,66 @@ bool Tab::IsCheck(int kingx, int kingy) const{
 
 
 
+bool Tab::IsCheckmate(Cor playerColor) {
+    int currentKx = (playerColor == Cor::White) ? this->ReiBranco->GetX() : ReiPreto->GetX();
+    int currentKy = (playerColor == Cor::White) ? this->ReiBranco->GetY() : ReiPreto->GetY();
+
+    if (!IsCheck(currentKx, currentKy)) {
+        return false; 
+    }
 
 
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            Piece* p = matriz[x][y];
+
+            if (p != nullptr && p->getColor() == playerColor) {
+                
+                for (int targetX = 0; targetX < 8; targetX++) {
+                    for (int targetY = 0; targetY < 8; targetY++) {
+                        
+                        Piece* targetPiece = matriz[targetX][targetY];
+                        
+                        if (targetPiece != nullptr && targetPiece->getColor() == playerColor) {
+                            continue;
+                        }
+
+                        bool isCapture = (targetPiece != nullptr);
+
+    
+                        if (p->IsValidMove(targetX, targetY, isCapture)) {
+                            
+
+                            matriz[targetX][targetY] = p;
+                            matriz[x][y] = nullptr;
+                            p->SetPos(targetX, targetY);
+
+           
+                            int simKx = (p == ReiBranco || p == ReiPreto) ? targetX : currentKx;
+                            int simKy = (p == ReiBranco || p == ReiPreto) ? targetY : currentKy;
 
 
+                            bool stillInCheck = IsCheck(simKx, simKy);
+
+                            matriz[x][y] = p;
+                            matriz[targetX][targetY] = targetPiece;
+                            p->SetPos(x, y);
+
+                            if (!stillInCheck) {
+ 
+                                return false; 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
+    return true;
+}
+
+Cor Tab::GetTurnoAtual() const {
+    return this->TurnoAtual;
+}

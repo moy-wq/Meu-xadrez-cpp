@@ -12,7 +12,7 @@ class Piece {
     public:
         Piece(int startx, int starty, Cor color, Tipo type); // construtor
 
-    virtual bool IsValidMove(int targetx, int target_y, bool IsCapture) = 0; // Flag de possibilidade de movimento
+    virtual bool IsValidMove(int targetx, int target_y, bool IsCapture = false) = 0; // Flag de possibilidade de movimento
 
     void SetPos(int newx, int newy);
 
