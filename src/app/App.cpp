@@ -35,11 +35,12 @@ void App::app_loop(){
                 } else {
                     int startX = pecaSelecionada->GetX(); 
                     int startY = pecaSelecionada->GetY(); 
+
                     Cor corPeca = pecaSelecionada->getColor();
                     Tipo tipoPeca = pecaSelecionada->getType(); 
 
                     
-                    bool moveu = tabuleiro_logico->MovePiece(startY, startX, clickPos.y, clickPos.x);
+                    bool moveu = tabuleiro_logico->MovePiece(startX, startY, clickPos.y, clickPos.x);
 
                     pecaSelecionada = nullptr;
 

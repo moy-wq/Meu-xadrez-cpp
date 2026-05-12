@@ -170,8 +170,8 @@ void Interface::DrawGameOverScreen(Cor corVencedora) {
     DrawRectangle(0, 0, screenWidth, screenHeight, Fade(BLACK, 0.7f));
     
 
-    const char* textoVitoria = (corVencedora == Cor::White) ? "BRANCAS VENCEM!" : "PRETAS VENCEM!";
-    const char* textoTitulo = "XEQUE-MATE!";
+    const char* textoVitoria = (corVencedora == Cor::White) ? "BRANCAS VENCEM" : "PRETAS VENCEM";
+    const char* textoTitulo = "XEQUE-MATE";
     const char* textoDica = "Pressione ENTER para jogar novamente";
 
     int sizeTitulo = 60;

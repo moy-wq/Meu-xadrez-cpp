@@ -86,20 +86,26 @@ bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
 
     Piece* peca_destino = matriz[targetx][targety];
 
+ 
     if (peca_destino != nullptr && Color_player == peca_destino->getColor()){
         return false;
     } 
     
     bool IsCapture = (peca_destino != nullptr);
 
+    if (peca_movida->getType() != Tipo::CAVALO && !IsPathClear(startx, starty, targetx, targety)) {
+        return false;
+    }
+
 
     if (peca_movida->IsValidMove(targetx, targety, IsCapture)){
   
+        // Executa o movimento fantasma
         matriz[targetx][targety] = peca_movida;
         matriz[startx][starty] = nullptr;
         peca_movida->SetPos(targetx, targety); 
 
-
+        // Descobre onde o Rei vai estar para checar o Xeque
         int kx, ky;
         if (Color_player == Cor::White) {
             kx = (peca_movida == ReiBranco) ? targetx : ReiBranco->GetX(); 
@@ -109,13 +115,12 @@ bool Tab::MovePiece(int startx, int starty, int targetx, int targety){
             ky = (peca_movida == ReiPreto) ? targety : ReiPreto->GetY();
         }
 
-
         bool SafeMove = !IsCheck(kx, ky); 
 
         if (SafeMove){
  
             if (peca_destino != nullptr){
-                delete peca_destino; // Libera memória da peça capturada
+                delete peca_destino; 
             }
 
 
@@ -193,8 +198,11 @@ bool Tab::IsPathClear(int startx, int starty, int targetx, int targety){
 
 
 /*percorre o tabuleiro em possíveis direções buscando peças que podem atacar o rei (condição de check)*/
-bool Tab::CheckRaio(int kingx, int kingy, int stepx, int stepy, Tipo p1, Tipo p2) const{ 
+bool Tab::CheckRaio(int kingx, int kingy, int stepx, int stepy, Tipo p1, Tipo p2) const { 
     Piece* king = matriz[kingx][kingy];
+
+    if (king == nullptr) return false;
+
     int possible_x = kingx + stepx;
     int possible_y = kingy + stepy;
 
@@ -202,34 +210,41 @@ bool Tab::CheckRaio(int kingx, int kingy, int stepx, int stepy, Tipo p1, Tipo p2
         Piece* possible_piece = matriz[possible_x][possible_y];
 
         if (possible_piece != nullptr){
-            if (possible_piece->getColor() != king->getColor() && possible_piece->getType() == p1 || possible_piece->getType() == p2){
+            if (possible_piece->getColor() != king->getColor() && 
+               (possible_piece->getType() == p1 || possible_piece->getType() == p2)) {
                 return true;        
             }
             break;
         }
 
-    possible_x += stepx;
-    possible_y += stepy; // modificam exatamente a direção percorrida no tabuleiro
-        
+        possible_x += stepx;
+        possible_y += stepy; 
     }
     return false;
 }
 
-
 /* checa as possíveis posições do cavalo*/
-bool Tab::CheckCavalo(int kingx, int kingy) const{
+bool Tab::CheckCavalo(int kingx, int kingy) const {
     Piece* king = matriz[kingx][kingy];
+    if (king == nullptr) return false;
 
-    int dx[] = {1,-1,1,-1, 2,2,-2,-2};
-    int dy[] = {2,-2,2,-2, 1,-1,1,-1};
+    // Os 8 movimentos em "L" relativos à posição do Rei
+    int dx[] = { 1,  1, -1, -1,  2,  2, -2, -2};
+    int dy[] = { 2, -2,  2, -2,  1, -1,  1, -1};
 
-    for (int i = 0; i < 8;i++){
-        int targetX = dx[i];
-        int targetY = dy[i];
-        if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8){
+    for (int i = 0; i < 8; i++) {
+        // CORREÇÃO 1: Você precisa somar a posição do Rei!
+        int targetX = kingx + dx[i];
+        int targetY = kingy + dy[i];
+
+        // Verifica se a casa está dentro do tabuleiro
+        if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
             Piece* possible_piece = matriz[targetX][targetY];
 
-            if (possible_piece != nullptr && possible_piece->getColor() != king->getColor()){
+            // CORREÇÃO 2: Tem que ser COR DIFERENTE e TIPO CAVALO
+            if (possible_piece != nullptr && 
+                possible_piece->getColor() != king->getColor() && 
+                possible_piece->getType() == Tipo::CAVALO) {
                 return true;
             }
         }
@@ -238,12 +253,13 @@ bool Tab::CheckCavalo(int kingx, int kingy) const{
 }
 
 
-
-
-bool Tab::IsCheck(int kingx, int kingy) const{
+bool Tab::IsCheck(int kingx, int kingy) const {
     Piece* king_piece = matriz[kingx][kingy];
-    Cor color_king = king_piece->getColor();  
+    if (king_piece == nullptr) return false; 
     
+    Cor color_king = king_piece->getColor();  
+
+    // 1. Raios e Cavalo (Assumindo que CheckRaio e CheckCavalo já filtram cor corretamente)
     if (CheckRaio(kingx, kingy,  1,  0, Tipo::TORRE, Tipo::RAINHA)) return true; 
     if (CheckRaio(kingx, kingy, -1,  0, Tipo::TORRE, Tipo::RAINHA)) return true; 
     if (CheckRaio(kingx, kingy,  0,  1, Tipo::TORRE, Tipo::RAINHA)) return true;
@@ -256,9 +272,40 @@ bool Tab::IsCheck(int kingx, int kingy) const{
 
     if (CheckCavalo(kingx, kingy)) return true;
 
-    return false;
-}
+    // 2. Xeque de Peão (Inimigos vêm da direção oposta ao movimento do Rei)
+    // Se Rei Branco (sobe o mapa +1), os peões pretos vêm de cima (+1)
+    // Se Rei Preto (desce o mapa -1), os peões brancos vêm de baixo (-1)
+    int dir = (color_king == Cor::White) ? 1 : -1; 
+    int pawnX = kingx + dir;
 
+    if (pawnX >= 0 && pawnX < 8) {
+        for (int dy : {-1, 1}) {
+            int pawnY = kingy + dy;
+            if (pawnY >= 0 && pawnY < 8) {
+                Piece* p = matriz[pawnX][pawnY];
+                if (p != nullptr && p->getColor() != color_king && p->getType() == Tipo::PEAO) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // 3. Xeque de Rei (Um rei não pode encostar no outro)
+    for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+            if (dx == 0 && dy == 0) continue;
+            int nx = kingx + dx, ny = kingy + dy;
+            if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8) {
+                Piece* p = matriz[nx][ny];
+                if (p != nullptr && p->getColor() != color_king && p->getType() == Tipo::REI) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false; 
+}
 
 
 bool Tab::IsCheckmate(Cor playerColor) {
@@ -278,36 +325,40 @@ bool Tab::IsCheckmate(Cor playerColor) {
                 
                 for (int targetX = 0; targetX < 8; targetX++) {
                     for (int targetY = 0; targetY < 8; targetY++) {
-                        
                         Piece* targetPiece = matriz[targetX][targetY];
                         
-                        if (targetPiece != nullptr && targetPiece->getColor() == playerColor) {
-                            continue;
-                        }
 
+                        if (targetPiece != nullptr && targetPiece->getType() == Tipo::REI) {
+                            continue; 
+                        }
+                        if (targetPiece != nullptr && targetPiece->getColor() == playerColor) {
+                            continue; 
+                        }
+                        
                         bool isCapture = (targetPiece != nullptr);
 
-    
-                        if (p->IsValidMove(targetX, targetY, isCapture)) {
-                            
+                        bool caminhoLivre = (p->getType() == Tipo::CAVALO) ? true : IsPathClear(x, y, targetX, targetY);
+   
+                        if (caminhoLivre && p->IsValidMove(targetX, targetY, isCapture)) {
 
                             matriz[targetX][targetY] = p;
                             matriz[x][y] = nullptr;
+
+                            int antigaPecaX = x; 
+                            int antigaPecaY = y;
+                            
                             p->SetPos(targetX, targetY);
 
-           
-                            int simKx = (p == ReiBranco || p == ReiPreto) ? targetX : currentKx;
-                            int simKy = (p == ReiBranco || p == ReiPreto) ? targetY : currentKy;
-
+                            int simKx = (p->getType() == Tipo::REI) ? targetX : currentKx;
+                            int simKy = (p->getType() == Tipo::REI) ? targetY : currentKy;
 
                             bool stillInCheck = IsCheck(simKx, simKy);
-
-                            matriz[x][y] = p;
+                            
+                            matriz[antigaPecaX][antigaPecaY] = p;   
                             matriz[targetX][targetY] = targetPiece;
-                            p->SetPos(x, y);
+                            p->SetPos(antigaPecaX, antigaPecaY);
 
                             if (!stillInCheck) {
- 
                                 return false; 
                             }
                         }
