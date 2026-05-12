@@ -68,8 +68,7 @@ Interface::Interface(int tam_casa, int offset){
 
 Interface::~Interface(){};
 
-void Interface::DrawTab(Tab& tabuleiroLogico) {
-            ClearBackground(BLACK);
+void Interface::DrawTab(Tab* tabuleiroLogico) {
 
 
             Vector2 pos_mouse = GetMousePosition();
@@ -81,7 +80,7 @@ void Interface::DrawTab(Tab& tabuleiroLogico) {
                     int colunaMatriz = (i - 200) / this->tamanhoCasa;
                     int linhaMatriz = j / this->tamanhoCasa;
 
-                    Piece* peca_atual = tabuleiroLogico.getPiece(linhaMatriz, colunaMatriz);
+                    Piece* peca_atual = tabuleiroLogico->getPiece(linhaMatriz,colunaMatriz);
 
                     if ((i / this->tamanhoCasa) % 2 == 0){
                         if ((j /this->tamanhoCasa) % 2 == 0){
@@ -105,25 +104,86 @@ void Interface::DrawTab(Tab& tabuleiroLogico) {
                         }
 
                 
-                    if (peca_atual != nullptr){ 
-                        Vector2 posDesenho = {(float)i + 10, (float)j + 10};
-                        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->PeaoPreto, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::White) DrawTextureV(this->PeaoBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->BispoPreto, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::White) DrawTextureV(this->BispoBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::Black) DrawTextureV(this->TorrePreta, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::White) DrawTextureV(this->TorreBranca, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->CavaloPreto, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::White) DrawTextureV(this->CavaloBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::Black) DrawTextureV(this->ReiPreto, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::White) DrawTextureV(this->ReiBranco, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::Black) DrawTextureV(this->RainhaPreta, posDesenho, BLACK);
-                        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::White) DrawTextureV(this->RainhaBranca, posDesenho, BLACK);
+                    if (peca_atual != nullptr) PlaceTexture(peca_atual, i , j); 
+                       
                     
-                    }
                 }
             }
 
 }
 
 
+void Interface::PlaceTexture(Piece* peca_atual, int i, int j){
+     Vector2 posDesenho = {(float)i + 10, (float)j + 10};
+        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->PeaoPreto, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::White) DrawTextureV(this->PeaoBranco, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->BispoPreto, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::White) DrawTextureV(this->BispoBranco, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::Black) DrawTextureV(this->TorrePreta, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::White) DrawTextureV(this->TorreBranca, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->CavaloPreto, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::White) DrawTextureV(this->CavaloBranco, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::Black) DrawTextureV(this->ReiPreto, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::White) DrawTextureV(this->ReiBranco, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::Black) DrawTextureV(this->RainhaPreta, posDesenho, BLACK);
+        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::White) DrawTextureV(this->RainhaBranca, posDesenho, BLACK);
+}
+
+void Interface::ShowPossibleMoves(Piece* currentPiece, Tab* tabuleiroLogico){
+
+    int linhaOrigem = currentPiece->GetX(); 
+    int colOrigem = currentPiece->GetY(); 
+    
+    for (int linha = 0; linha < 8; linha++){
+        for (int coluna = 0; coluna < 8; coluna++){
+            
+            Piece* peca_destino = tabuleiroLogico->getPiece(linha, coluna);
+            bool isCapture = false;
+
+            if (peca_destino != nullptr) {
+                if (peca_destino->getColor() == currentPiece->getColor()) {
+                    continue;
+                }
+                isCapture = true; // Inimigo!
+            }
+
+
+            if (currentPiece->IsValidMove(linha, coluna, isCapture)){
+                if (currentPiece->getType() == Tipo::CAVALO || 
+                    tabuleiroLogico->IsPathClear(linhaOrigem, colOrigem, linha, coluna)){
+                    
+
+                    int drawX = 200 + (coluna * this->tamanhoCasa); 
+                    int drawY = (linha * this->tamanhoCasa);        
+                    
+                    DrawRectangle(drawX + 10, drawY + 10, (this->tamanhoCasa - 20), (this->tamanhoCasa - 20), SKYBLUE);
+                }
+            }
+        }
+    }
+}
+
+void Interface::DrawGameOverScreen(Cor corVencedora) {
+
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+    DrawRectangle(0, 0, screenWidth, screenHeight, Fade(BLACK, 0.7f));
+    
+
+    const char* textoVitoria = (corVencedora == Cor::White) ? "BRANCAS VENCEM" : "PRETAS VENCEM";
+    const char* textoTitulo = "XEQUE-MATE";
+    const char* textoDica = "Pressione ENTER para jogar novamente";
+
+    int sizeTitulo = 60;
+    int sizeVitoria = 40;
+    int sizeDica = 20;
+
+    int posX_Titulo = (screenWidth - MeasureText(textoTitulo, sizeTitulo)) / 2;
+    int posX_Vitoria = (screenWidth - MeasureText(textoVitoria, sizeVitoria)) / 2;
+    int posX_Dica = (screenWidth - MeasureText(textoDica, sizeDica)) / 2;
+
+
+    DrawText(textoTitulo, posX_Titulo, screenHeight/2 - 100, sizeTitulo, RED);
+    DrawText(textoVitoria, posX_Vitoria, screenHeight/2 - 20, sizeVitoria, WHITE);
+    DrawText(textoDica, posX_Dica, screenHeight/2 + 80, sizeDica, LIGHTGRAY);
+}
