@@ -4,21 +4,37 @@
 
 
 App::App(){
-    this->tabuleiro = new Tab();
-    this->interface = new Interface(100,800);
+    this->tabuleiro = nullptr;
+    this->interface = nullptr;
 
 }
 
 /*Loop do jogo*/
 void App::app_loop(){
+    this->currentState = GameState::MENU;
+
+    InitWindow(1200,800, "Xadrez");
+    SetTargetFPS(60);
+
+    if (this->tabuleiro == nullptr) {
+        this->tabuleiro = new Tab();
+    }
+    
+    if (this->interface == nullptr) {
+        this->interface = new Interface(1200, 800);
+    }
+    
     Tab* tabuleiro_logico = this->tabuleiro;
     Piece* pecaSelecionada = nullptr; 
-    
-    GameState currentState = PLAYING; 
+
     Cor corVencedora; 
 
     while(!WindowShouldClose()){       
-        
+        if (currentState == MENU){
+            if (IsKeyPressed(KEY_ENTER)) {
+                this->currentState = GameState::PLAYING;
+            }
+        }
 
         if (currentState == PLAYING) {
             
@@ -55,7 +71,7 @@ void App::app_loop(){
                 }
             }
             
-        } else if (currentState == GAME_OVER) {
+        } else if (this->currentState == GameState::GAME_OVER) {
             
             if (IsKeyPressed(KEY_ENTER)) {
                 delete this->tabuleiro;          
@@ -67,11 +83,11 @@ void App::app_loop(){
 
 
         BeginDrawing();
-            ClearBackground(RAYWHITE);
-
-            interface->DrawTab(tabuleiro_logico); 
+            ClearBackground(BROWN);
+            if (this->currentState == MENU){this->interface->DrawBeginWindow();}
 
             if (currentState == PLAYING) {
+                interface->DrawTab(tabuleiro_logico);
                 if (pecaSelecionada != nullptr){
                     interface->ShowPossibleMoves(pecaSelecionada,tabuleiro_logico);
                 }

@@ -70,45 +70,46 @@ Interface::~Interface(){};
 
 void Interface::DrawTab(Tab* tabuleiroLogico) {
 
+    Vector2 pos_mouse = GetMousePosition();
+    Color color_quadrado;
 
-            Vector2 pos_mouse = GetMousePosition();
-            Color color_quadrado;
+    Interface::DrawCurrentTurn(tabuleiroLogico->GetTurnoAtual()); 
 
-            for (int i = 200; i < (200 + this->offsethorizontal); i+= this-> tamanhoCasa){
-                for (int j = 0; j < this->offsethorizontal; j+=this-> tamanhoCasa){ 
+    for (int i = 200; i < (200 + this->offsethorizontal); i+= this-> tamanhoCasa){
+        for (int j = 0; j < this->offsethorizontal; j+=this-> tamanhoCasa){ 
 
-                    int colunaMatriz = (i - 200) / this->tamanhoCasa;
-                    int linhaMatriz = j / this->tamanhoCasa;
+            int colunaMatriz = (i - 200) / this->tamanhoCasa;
+            int linhaMatriz = j / this->tamanhoCasa;
 
-                    Piece* peca_atual = tabuleiroLogico->getPiece(linhaMatriz,colunaMatriz);
+            Piece* peca_atual = tabuleiroLogico->getPiece(linhaMatriz,colunaMatriz);
 
-                    if ((i / this->tamanhoCasa) % 2 == 0){
-                        if ((j /this->tamanhoCasa) % 2 == 0){
-                            color_quadrado = DARKGRAY;
-                        } else {
-                            color_quadrado = RAYWHITE;
-                        }
-                    } else {
-                        if ((j /tamanhoCasa) % 2 != 0) {
-                            color_quadrado = DARKGRAY;
-                        } else { 
-                            color_quadrado = RAYWHITE;
-                        }
-                    } 
-                    
-                    DrawRectangle(i,j, 100,100, color_quadrado); 
-
-                    if (pos_mouse.x >= i && pos_mouse.x < (i + this->tamanhoCasa) 
-                        && pos_mouse.y >= j && pos_mouse.y < (j + this->tamanhoCasa)){
-                            DrawRectangle(i + 10,j + 10, (this->tamanhoCasa - 20), (this->tamanhoCasa - 20), SKYBLUE);
-                        }
-
-                
-                    if (peca_atual != nullptr) PlaceTexture(peca_atual, i , j); 
-                       
-                    
+            if ((i / this->tamanhoCasa) % 2 == 0){
+                if ((j /this->tamanhoCasa) % 2 == 0){
+                    color_quadrado = DARKGRAY;
+                } else {
+                    color_quadrado = RAYWHITE;
                 }
-            }
+            } else {
+                if ((j /tamanhoCasa) % 2 != 0) {
+                    color_quadrado = DARKGRAY;
+                } else { 
+                    color_quadrado = RAYWHITE;
+                }
+            } 
+            
+            DrawRectangle(i,j, tamanhoCasa,tamanhoCasa, color_quadrado); 
+
+            if (pos_mouse.x >= i && pos_mouse.x < (i + this->tamanhoCasa) 
+                && pos_mouse.y >= j && pos_mouse.y < (j + this->tamanhoCasa)){
+                    DrawRectangle(i + 10,j + 10, (this->tamanhoCasa - 20), (this->tamanhoCasa - 20), SKYBLUE);
+                }
+
+        
+            if (peca_atual != nullptr) PlaceTexture(peca_atual, i , j); 
+                
+            
+        }
+    }
 
 }
 
@@ -186,4 +187,43 @@ void Interface::DrawGameOverScreen(Cor corVencedora) {
     DrawText(textoTitulo, posX_Titulo, screenHeight/2 - 100, sizeTitulo, RED);
     DrawText(textoVitoria, posX_Vitoria, screenHeight/2 - 20, sizeVitoria, WHITE);
     DrawText(textoDica, posX_Dica, screenHeight/2 + 80, sizeDica, LIGHTGRAY);
+}
+
+
+void Interface::DrawCurrentTurn(Cor turnoAtual) {
+    // Coordenadas para o painel lateral ESQUERDO
+    // Como temos 200px de espaço, começamos no X = 20 e usamos 160px de largura (sobram 20px de margem)
+    int posX = 20; 
+    int posY = 50;
+    int largura = 160;
+    int altura = 80;
+
+    // O Texto Fixo
+    DrawText("TURNO ATUAL:", posX + 5, posY + 10, 20, BLACK);
+
+    // A cor dinâmica
+    if (turnoAtual == Cor::White) {
+        DrawRectangle(posX + 10, posY + 40, 140, 30, WHITE);
+        // O texto precisa de um pequeno ajuste de X para ficar centrado
+        DrawText("BRANCAS", posX + 32, posY + 45, 20, BLACK);
+    } else {
+        DrawRectangle(posX + 10, posY + 40, 140, 30, BLACK);
+        DrawText("PRETAS", posX + 35, posY + 45, 20, WHITE);
+    }
+}
+
+
+int Interface::getX(){
+    return this->fix_x;
+}
+
+int Interface::getY(){
+    return this->fix_y;
+}
+
+void Interface::DrawBeginWindow(){
+    ClearBackground(BLACK);
+
+    DrawText("SIMULADOR DE XADREZ", 350, 200, 60, RAYWHITE);
+    DrawText("Pressione [ENTER] para iniciar", 400, 400, 20, DARKGRAY);
 }
