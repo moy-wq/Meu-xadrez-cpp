@@ -21,7 +21,7 @@ void App::app_loop(){
     }
     
     if (this->interface == nullptr) {
-        this->interface = new Interface(1200, 800);
+        this->interface = new Interface(100, 200);
     }
     
     Tab* tabuleiro_logico = this->tabuleiro;
