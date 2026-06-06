@@ -9,6 +9,8 @@ class Interface{
         int tamanhoCasa;
         int offsethorizontal;
 
+        int fix_x, fix_y;
+
         Texture2D PeaoBranco;
         Texture2D PeaoPreto;
         Texture2D BispoBranco;
@@ -31,6 +33,12 @@ class Interface{
 
         ~Interface();
         void DrawGameOverScreen(Cor corVencedora);
+        void DrawCurrentTurn(Cor turnoAtual);
+
+        void DrawBeginWindow();
+
+        int getX();
+        int getY();
 
 };
 

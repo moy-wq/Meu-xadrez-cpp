@@ -6,7 +6,8 @@
 
 enum GameState {
     PLAYING,
-    GAME_OVER
+    GAME_OVER,
+    MENU
 };
 
 class App{
@@ -14,6 +15,7 @@ class App{
     private:
         Tab* tabuleiro;
         Interface* interface;
+        GameState currentState;
 
     public:
         App();

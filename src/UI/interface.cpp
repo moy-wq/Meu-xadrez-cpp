@@ -5,8 +5,8 @@
 #include "../../include/UI/Interface.hpp"
 #include "../../include/core/Tabuleiro.hpp"
 
-
-Interface::Interface(int tam_casa, int offset){
+Interface::Interface(int tam_casa, int offset)
+{
     tamanhoCasa = tam_casa;
     offsethorizontal = offset;
 
@@ -36,7 +36,6 @@ Interface::Interface(int tam_casa, int offset){
     ImageResize(&imgRainhaBranca, 80, 80);
     ImageResize(&imgRainhaPreta, 80, 80);
 
-
     this->PeaoBranco = LoadTextureFromImage(imgPeaoBranco);
     this->PeaoPreto = LoadTextureFromImage(imgPeaoPreto);
     this->BispoBranco = LoadTextureFromImage(imgBispoBranco);
@@ -50,7 +49,6 @@ Interface::Interface(int tam_casa, int offset){
     this->RainhaBranca = LoadTextureFromImage(imgRainhaBranca);
     this->RainhaPreta = LoadTextureFromImage(imgRainhaPreta);
 
-
     UnloadImage(imgPeaoBranco);
     UnloadImage(imgPeaoPreto);
     UnloadImage(imgBispoBranco);
@@ -63,99 +61,118 @@ Interface::Interface(int tam_casa, int offset){
     UnloadImage(imgReiPreto);
     UnloadImage(imgRainhaBranca);
     UnloadImage(imgRainhaPreta);
-
 }
 
-Interface::~Interface(){};
+Interface::~Interface() {};
 
-void Interface::DrawTab(Tab* tabuleiroLogico) {
+void Interface::DrawTab(Tab *tabuleiroLogico)
+{
+    Vector2 pos_mouse = GetMousePosition();
+    Color color_quadrado = RAYWHITE;
 
+    Interface::DrawCurrentTurn(tabuleiroLogico->GetTurnoAtual());
 
-            Vector2 pos_mouse = GetMousePosition();
-            Color color_quadrado;
+    for (int i = 200; i < (200 + 8 * this->tamanhoCasa); i += this->tamanhoCasa)
+    {
+        for (int j = 0; j < 800; j += this->tamanhoCasa)
+        {
 
-            for (int i = 200; i < (200 + this->offsethorizontal); i+= this-> tamanhoCasa){
-                for (int j = 0; j < this->offsethorizontal; j+=this-> tamanhoCasa){ 
+            int colunaMatriz = (i - 200) / this->tamanhoCasa;
+            int linhaMatriz  = j / this->tamanhoCasa;
 
-                    int colunaMatriz = (i - 200) / this->tamanhoCasa;
-                    int linhaMatriz = j / this->tamanhoCasa;
+            Piece *peca_atual = tabuleiroLogico->getPiece(linhaMatriz, colunaMatriz);
 
-                    Piece* peca_atual = tabuleiroLogico->getPiece(linhaMatriz,colunaMatriz);
-
-                    if ((i / this->tamanhoCasa) % 2 == 0){
-                        if ((j /this->tamanhoCasa) % 2 == 0){
-                            color_quadrado = DARKGRAY;
-                        } else {
-                            color_quadrado = RAYWHITE;
-                        }
-                    } else {
-                        if ((j /tamanhoCasa) % 2 != 0) {
-                            color_quadrado = DARKGRAY;
-                        } else { 
-                            color_quadrado = RAYWHITE;
-                        }
-                    } 
-                    
-                    DrawRectangle(i,j, 100,100, color_quadrado); 
-
-                    if (pos_mouse.x >= i && pos_mouse.x < (i + this->tamanhoCasa) 
-                        && pos_mouse.y >= j && pos_mouse.y < (j + this->tamanhoCasa)){
-                            DrawRectangle(i + 10,j + 10, (this->tamanhoCasa - 20), (this->tamanhoCasa - 20), SKYBLUE);
-                        }
-
-                
-                    if (peca_atual != nullptr) PlaceTexture(peca_atual, i , j); 
-                       
-                    
-                }
+            if (colunaMatriz % 2 == 0)
+            {
+                color_quadrado = (linhaMatriz % 2 == 0) ? DARKGRAY : RAYWHITE;
+            }
+            else
+            {
+                color_quadrado = (linhaMatriz % 2 != 0) ? DARKGRAY : RAYWHITE;
             }
 
+            DrawRectangle(i, j, this->tamanhoCasa, this->tamanhoCasa, color_quadrado);
+
+
+            if (pos_mouse.x >= i && pos_mouse.x < (i + this->tamanhoCasa) &&
+                pos_mouse.y >= j && pos_mouse.y < (j + this->tamanhoCasa))
+            {
+                DrawRectangle(
+                    i + 10,
+                    j + 10,
+                    this->tamanhoCasa - 20,
+                    this->tamanhoCasa - 20,
+                    SKYBLUE
+                );
+            }
+
+            if (peca_atual != nullptr)
+                PlaceTexture(peca_atual, i, j);
+        }
+    }
 }
 
-
-void Interface::PlaceTexture(Piece* peca_atual, int i, int j){
-     Vector2 posDesenho = {(float)i + 10, (float)j + 10};
-        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->PeaoPreto, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::White) DrawTextureV(this->PeaoBranco, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->BispoPreto, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::White) DrawTextureV(this->BispoBranco, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::Black) DrawTextureV(this->TorrePreta, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::White) DrawTextureV(this->TorreBranca, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::Black) DrawTextureV(this->CavaloPreto, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::White) DrawTextureV(this->CavaloBranco, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::Black) DrawTextureV(this->ReiPreto, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::White) DrawTextureV(this->ReiBranco, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::Black) DrawTextureV(this->RainhaPreta, posDesenho, BLACK);
-        if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::White) DrawTextureV(this->RainhaBranca, posDesenho, BLACK);
+void Interface::PlaceTexture(Piece *peca_atual, int i, int j) 
+{
+    Vector2 posDesenho = {(float)i + 10, (float)j + 10};
+    if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::Black)
+        DrawTextureV(this->PeaoPreto, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::White)
+        DrawTextureV(this->PeaoBranco, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::Black)
+        DrawTextureV(this->BispoPreto, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::BISPO && peca_atual->getColor() == Cor::White)
+        DrawTextureV(this->BispoBranco, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::Black)
+        DrawTextureV(this->TorrePreta, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::TORRE && peca_atual->getColor() == Cor::White)
+        DrawTextureV(this->TorreBranca, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::Black)
+        DrawTextureV(this->CavaloPreto, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::CAVALO && peca_atual->getColor() == Cor::White)
+        DrawTextureV(this->CavaloBranco, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::Black)
+        DrawTextureV(this->ReiPreto, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::REI && peca_atual->getColor() == Cor::White)
+        DrawTextureV(this->ReiBranco, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::Black)
+        DrawTextureV(this->RainhaPreta, posDesenho, BLACK);
+    if (peca_atual->getType() == Tipo::RAINHA && peca_atual->getColor() == Cor::White)
+        DrawTextureV(this->RainhaBranca, posDesenho, BLACK);
 }
 
-void Interface::ShowPossibleMoves(Piece* currentPiece, Tab* tabuleiroLogico){
+void Interface::ShowPossibleMoves(Piece *currentPiece, Tab *tabuleiroLogico)
+{
 
-    int linhaOrigem = currentPiece->GetX(); 
-    int colOrigem = currentPiece->GetY(); 
-    
-    for (int linha = 0; linha < 8; linha++){
-        for (int coluna = 0; coluna < 8; coluna++){
-            
-            Piece* peca_destino = tabuleiroLogico->getPiece(linha, coluna);
+    int linhaOrigem = currentPiece->GetX();
+    int colOrigem = currentPiece->GetY();
+
+    for (int linha = 0; linha < 8; linha++)
+    {
+        for (int coluna = 0; coluna < 8; coluna++)
+        {
+
+            Piece *peca_destino = tabuleiroLogico->getPiece(linha, coluna);
             bool isCapture = false;
 
-            if (peca_destino != nullptr) {
-                if (peca_destino->getColor() == currentPiece->getColor()) {
+            if (peca_destino != nullptr)
+            {
+                if (peca_destino->getColor() == currentPiece->getColor())
+                {
                     continue;
                 }
                 isCapture = true; // Inimigo!
             }
 
+            if (currentPiece->IsValidMove(linha, coluna, isCapture))
+            {
+                if (currentPiece->getType() == Tipo::CAVALO ||
+                    tabuleiroLogico->IsPathClear(linhaOrigem, colOrigem, linha, coluna))
+                {
 
-            if (currentPiece->IsValidMove(linha, coluna, isCapture)){
-                if (currentPiece->getType() == Tipo::CAVALO || 
-                    tabuleiroLogico->IsPathClear(linhaOrigem, colOrigem, linha, coluna)){
-                    
+                    int drawX = 200 + (coluna * this->tamanhoCasa);
+                    int drawY = (linha * this->tamanhoCasa);
 
-                    int drawX = 200 + (coluna * this->tamanhoCasa); 
-                    int drawY = (linha * this->tamanhoCasa);        
-                    
                     DrawRectangle(drawX + 10, drawY + 10, (this->tamanhoCasa - 20), (this->tamanhoCasa - 20), SKYBLUE);
                 }
             }
@@ -163,16 +180,16 @@ void Interface::ShowPossibleMoves(Piece* currentPiece, Tab* tabuleiroLogico){
     }
 }
 
-void Interface::DrawGameOverScreen(Cor corVencedora) {
+void Interface::DrawGameOverScreen(Cor corVencedora)
+{
 
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
     DrawRectangle(0, 0, screenWidth, screenHeight, Fade(BLACK, 0.7f));
-    
 
-    const char* textoVitoria = (corVencedora == Cor::White) ? "BRANCAS VENCEM" : "PRETAS VENCEM";
-    const char* textoTitulo = "XEQUE-MATE";
-    const char* textoDica = "Pressione ENTER para jogar novamente";
+    const char *textoVitoria = (corVencedora == Cor::White) ? "BRANCAS VENCEM" : "PRETAS VENCEM";
+    const char *textoTitulo = "XEQUE-MATE";
+    const char *textoDica = "Pressione ENTER para jogar novamente";
 
     int sizeTitulo = 60;
     int sizeVitoria = 40;
@@ -182,8 +199,59 @@ void Interface::DrawGameOverScreen(Cor corVencedora) {
     int posX_Vitoria = (screenWidth - MeasureText(textoVitoria, sizeVitoria)) / 2;
     int posX_Dica = (screenWidth - MeasureText(textoDica, sizeDica)) / 2;
 
+    DrawText(textoTitulo, posX_Titulo, screenHeight / 2 - 100, sizeTitulo, RED);
+    DrawText(textoVitoria, posX_Vitoria, screenHeight / 2 - 20, sizeVitoria, WHITE);
+    DrawText(textoDica, posX_Dica, screenHeight / 2 + 80, sizeDica, LIGHTGRAY);
+}
 
-    DrawText(textoTitulo, posX_Titulo, screenHeight/2 - 100, sizeTitulo, RED);
-    DrawText(textoVitoria, posX_Vitoria, screenHeight/2 - 20, sizeVitoria, WHITE);
-    DrawText(textoDica, posX_Dica, screenHeight/2 + 80, sizeDica, LIGHTGRAY);
+void Interface::DrawCurrentTurn(Cor turnoAtual)
+{
+    int posX = 20;
+    int posY = 50;
+    int largura = 160;
+    int altura = 80;
+
+    DrawText("TURNO ATUAL:", posX + 5, posY + 10, 20, BLACK);
+
+    if (turnoAtual == Cor::White)
+    {
+        DrawRectangle(posX + 10, posY + 40, 140, 30, WHITE);
+    
+        DrawText("BRANCAS", posX + 32, posY + 45, 20, BLACK);
+    }
+    else
+    {
+        DrawRectangle(posX + 10, posY + 40, 140, 30, BLACK);
+        DrawText("PRETAS", posX + 35, posY + 45, 20, WHITE);
+    }
+}
+
+int Interface::getX()
+{
+    return this->fix_x;
+}
+
+int Interface::getY()
+{
+    return this->fix_y;
+}
+
+void Interface::DrawBeginWindow() {
+    ClearBackground(BLACK);
+
+
+    const char* titulo = "SIMULADOR DE XADREZ";
+    int tamanhoTitulo = 60;
+    int larguraTitulo = MeasureText(titulo, tamanhoTitulo);
+    int posX_Titulo = (1200 - larguraTitulo) / 2;
+    int posY_Titulo = 300; // Pouco acima do centro (400)
+
+    const char* subtitulo = "Pressione [ENTER] para iniciar";
+    int tamanhoSubtitulo = 20;
+    int larguraSubtitulo = MeasureText(subtitulo, tamanhoSubtitulo);
+    int posX_Subtitulo = (1200 - larguraSubtitulo) / 2;
+    int posY_Subtitulo = 400; 
+
+    DrawText(titulo, posX_Titulo, posY_Titulo, tamanhoTitulo, RAYWHITE);
+    DrawText(subtitulo, posX_Subtitulo, posY_Subtitulo, tamanhoSubtitulo, DARKGRAY);
 }
