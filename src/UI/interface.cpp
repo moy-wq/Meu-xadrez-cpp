@@ -10,18 +10,18 @@ Interface::Interface(int tam_casa, int offset)
     tamanhoCasa = tam_casa;
     offsethorizontal = offset;
 
-    Image imgPeaoBranco = LoadImage("../assets/PeaoBranco.png");
-    Image imgPeaoPreto = LoadImage("../assets/PeaoPreto.png");
-    Image imgBispoBranco = LoadImage("../assets/BispoBranco.png");
-    Image imgBispoPreto = LoadImage("../assets/BispoPreto.png");
-    Image imgTorreBranca = LoadImage("../assets/TorreBranca.png");
-    Image imgTorrePreta = LoadImage("../assets/TorrePreta.png");
-    Image imgCavaloBranco = LoadImage("../assets/CavaloBranco.png");
-    Image imgCavaloPreto = LoadImage("../assets/CavaloPreto.png");
-    Image imgReiBranco = LoadImage("../assets/ReiBranco.png");
-    Image imgReiPreto = LoadImage("../assets/ReiPreto.png");
-    Image imgRainhaBranca = LoadImage("../assets/RainhaBranca.png");
-    Image imgRainhaPreta = LoadImage("../assets/RainhaPreta.png");
+    Image imgPeaoBranco = LoadImage("assets/PeaoBranco.png");
+    Image imgPeaoPreto = LoadImage("assets/PeaoPreto.png");
+    Image imgBispoBranco = LoadImage("assets/BispoBranco.png");
+    Image imgBispoPreto = LoadImage("assets/BispoPreto.png");
+    Image imgTorreBranca = LoadImage("assets/TorreBranca.png");
+    Image imgTorrePreta = LoadImage("assets/TorrePreta.png");
+    Image imgCavaloBranco = LoadImage("assets/CavaloBranco.png");
+    Image imgCavaloPreto = LoadImage("assets/CavaloPreto.png");
+    Image imgReiBranco = LoadImage("assets/ReiBranco.png");
+    Image imgReiPreto = LoadImage("assets/ReiPreto.png");
+    Image imgRainhaBranca = LoadImage("assets/RainhaBranca.png");
+    Image imgRainhaPreta = LoadImage("assets/RainhaPreta.png");
 
     ImageResize(&imgPeaoBranco, 80, 80);
     ImageResize(&imgPeaoPreto, 80, 80);
@@ -67,50 +67,43 @@ Interface::~Interface() {};
 
 void Interface::DrawTab(Tab *tabuleiroLogico)
 {
-
     Vector2 pos_mouse = GetMousePosition();
-    Color color_quadrado;
+    Color color_quadrado = RAYWHITE;
 
     Interface::DrawCurrentTurn(tabuleiroLogico->GetTurnoAtual());
 
-    for (int i = 200; i < (200 + this->offsethorizontal); i += this->tamanhoCasa)
+    for (int i = 200; i < (200 + 8 * this->tamanhoCasa); i += this->tamanhoCasa)
     {
-        for (int j = 0; j < this->offsethorizontal; j += this->tamanhoCasa)
+        for (int j = 0; j < 800; j += this->tamanhoCasa)
         {
 
             int colunaMatriz = (i - 200) / this->tamanhoCasa;
-            int linhaMatriz = j / this->tamanhoCasa;
+            int linhaMatriz  = j / this->tamanhoCasa;
 
             Piece *peca_atual = tabuleiroLogico->getPiece(linhaMatriz, colunaMatriz);
 
-            if ((i / this->tamanhoCasa) % 2 == 0)
+            if (colunaMatriz % 2 == 0)
             {
-                if ((j / this->tamanhoCasa) % 2 == 0)
-                {
-                    color_quadrado = DARKGRAY;
-                }
-                else
-                {
-                    color_quadrado = RAYWHITE;
-                }
+                color_quadrado = (linhaMatriz % 2 == 0) ? DARKGRAY : RAYWHITE;
             }
             else
             {
-                if ((j / tamanhoCasa) % 2 != 0)
-                {
-                    color_quadrado = DARKGRAY;
-                }
-                else
-                {
-                    color_quadrado = RAYWHITE;
-                }
+                color_quadrado = (linhaMatriz % 2 != 0) ? DARKGRAY : RAYWHITE;
             }
 
-            DrawRectangle(i, j, tamanhoCasa, tamanhoCasa, color_quadrado);
+            DrawRectangle(i, j, this->tamanhoCasa, this->tamanhoCasa, color_quadrado);
 
-            if (pos_mouse.x >= i && pos_mouse.x < (i + this->tamanhoCasa) && pos_mouse.y >= j && pos_mouse.y < (j + this->tamanhoCasa))
+
+            if (pos_mouse.x >= i && pos_mouse.x < (i + this->tamanhoCasa) &&
+                pos_mouse.y >= j && pos_mouse.y < (j + this->tamanhoCasa))
             {
-                DrawRectangle(i + 10, j + 10, (this->tamanhoCasa - 20), (this->tamanhoCasa - 20), SKYBLUE);
+                DrawRectangle(
+                    i + 10,
+                    j + 10,
+                    this->tamanhoCasa - 20,
+                    this->tamanhoCasa - 20,
+                    SKYBLUE
+                );
             }
 
             if (peca_atual != nullptr)
@@ -119,7 +112,7 @@ void Interface::DrawTab(Tab *tabuleiroLogico)
     }
 }
 
-void Interface::PlaceTexture(Piece *peca_atual, int i, int j)
+void Interface::PlaceTexture(Piece *peca_atual, int i, int j) 
 {
     Vector2 posDesenho = {(float)i + 10, (float)j + 10};
     if (peca_atual->getType() == Tipo::PEAO && peca_atual->getColor() == Cor::Black)
@@ -213,21 +206,17 @@ void Interface::DrawGameOverScreen(Cor corVencedora)
 
 void Interface::DrawCurrentTurn(Cor turnoAtual)
 {
-    // Coordenadas para o painel lateral ESQUERDO
-    // Como temos 200px de espaço, começamos no X = 20 e usamos 160px de largura (sobram 20px de margem)
     int posX = 20;
     int posY = 50;
     int largura = 160;
     int altura = 80;
 
-    // O Texto Fixo
     DrawText("TURNO ATUAL:", posX + 5, posY + 10, 20, BLACK);
 
-    // A cor dinâmica
     if (turnoAtual == Cor::White)
     {
         DrawRectangle(posX + 10, posY + 40, 140, 30, WHITE);
-        // O texto precisa de um pequeno ajuste de X para ficar centrado
+    
         DrawText("BRANCAS", posX + 32, posY + 45, 20, BLACK);
     }
     else
@@ -250,21 +239,19 @@ int Interface::getY()
 void Interface::DrawBeginWindow() {
     ClearBackground(BLACK);
 
-    // 1. Configurações do Título principal
+
     const char* titulo = "SIMULADOR DE XADREZ";
     int tamanhoTitulo = 60;
     int larguraTitulo = MeasureText(titulo, tamanhoTitulo);
     int posX_Titulo = (1200 - larguraTitulo) / 2;
     int posY_Titulo = 300; // Pouco acima do centro (400)
 
-    // 2. Configurações do Subtítulo
     const char* subtitulo = "Pressione [ENTER] para iniciar";
     int tamanhoSubtitulo = 20;
     int larguraSubtitulo = MeasureText(subtitulo, tamanhoSubtitulo);
     int posX_Subtitulo = (1200 - larguraSubtitulo) / 2;
-    int posY_Subtitulo = 400; // Exatamente no centro
+    int posY_Subtitulo = 400; 
 
-    // 3. Desenha na tela usando as posições calculadas
     DrawText(titulo, posX_Titulo, posY_Titulo, tamanhoTitulo, RAYWHITE);
     DrawText(subtitulo, posX_Subtitulo, posY_Subtitulo, tamanhoSubtitulo, DARKGRAY);
 }

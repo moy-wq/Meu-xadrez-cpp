@@ -84,15 +84,14 @@ void App::app_loop(){
 
         BeginDrawing();
             ClearBackground(BROWN);
-            if (this->currentState == MENU){this->interface->DrawBeginWindow();}
+            if (this->currentState == MENU){
+                this->interface->DrawBeginWindow();
+            }
 
             if (currentState == PLAYING) {
                 interface->DrawTab(tabuleiro_logico);
-                if (pecaSelecionada != nullptr){
-                    interface->ShowPossibleMoves(pecaSelecionada,tabuleiro_logico);
-                }
-            } 
-            else if (currentState == GAME_OVER) {
+                if (pecaSelecionada != nullptr){ interface->ShowPossibleMoves(pecaSelecionada,tabuleiro_logico); }
+            } else if (currentState == GAME_OVER) {
                 interface->DrawGameOverScreen(corVencedora);
             }
             
